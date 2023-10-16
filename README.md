@@ -7,3 +7,6 @@ Team Members:
 
 # Technologies
 We intend to use React for the front-end and java Spring Boot for the object-oriented backend.
+
+# Deliverables
+All the deliverables for each iteration will be documented in the [wiki](https://github.com/AndyChhuon/SOEN-342/wiki)
