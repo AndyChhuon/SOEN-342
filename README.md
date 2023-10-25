@@ -6,7 +6,7 @@ Team Members:
 * Monika Moanes - 40188452 - (monicanasser6@gmail.com)
 
 # Technologies
-We intend to use React for the front-end and java Spring Boot for the object-oriented backend.
+We intend to use Java as the object-oriented language for the project.
 
 # Deliverables
 All the deliverables for each iteration will be documented in the [wiki](https://github.com/AndyChhuon/SOEN-342/wiki).
