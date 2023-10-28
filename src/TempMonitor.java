@@ -5,7 +5,14 @@ public class TempMonitor {
     private List<Sensor> deployed;
     private HashMap<Sensor, Location> map;
     private HashMap<Sensor, Temperature> read;
-
+    
+//constructor
+public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap<Sensor, Temperature> read) {
+        this.deployed = deployed;
+        this.map = map;
+        this.read = read;
+    }
+    
     //TODO
     public String deploySensor(Sensor sensor, Location location){
         // return success, alreadyDeployed, or locationAlreadyCovered
