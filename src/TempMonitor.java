@@ -16,6 +16,11 @@ public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap
     //TODO
     public String deploySensor(Sensor sensor, Location location){
         // return success, alreadyDeployed, or locationAlreadyCovered
+        if(checkIfSensorDeployed(sensor).equals(Message.SensorAlreadyDeployed.toString()))
+            return Message.SensorAlreadyDeployed.toString();
+//        if (checkIfLocationCovered(location).equals(Message.LocationAlreadyCovered.toString()))
+//            return Message.LocationAlreadyCovered.toString();
+
         return "";
     }
 
@@ -38,14 +43,29 @@ public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap
         sensor.setLocation(location);
         sensor.setDeployed(true);
     }
-    //TODO
+
     private String checkIfSensorDeployed(Sensor sensor){
-        return Message.SensorAlreadyDeployed.label;
+    //To check if sensor is deployed, must check if sensor has a location
+        String msg = null;
+        try{
+            sensor.getLocation().getLocationName();
+            msg = Message.SensorAlreadyDeployed.toString();
+            return msg;
+            }
+        catch (Exception e){
+           msg = "Sensor has not been deployed";}
+        return msg;
+
     }
 
     //TODO
     private String checkIfLocationCovered(Location location){
-        return Message.LocationAlreadyCovered.label;
+    // we need to check if location is in map hashmap
+        if (map.containsValue(location)){
+            return Message.LocationAlreadyCovered.label;
+        }
+        else
+            return null;
     }
 
     //TODO
