@@ -62,21 +62,25 @@ public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap
     public String checkIfLocationCovered(Location location){
     // we need to check if location is in map hashmap
         String msg = null;
-
-            if (map.containsValue(location)){
-                System.out.println(location.getLocationName());
-                msg = Message.LocationAlreadyCovered.label;
-            }
-            else{
-                msg = ("not there");
-            }
+        if (map.containsValue(location)){
+            msg = Message.LocationAlreadyCovered.label;
+        }
+        else{
+            msg = ("location ok");
+        }
         return msg;
 
     }
 
-    //TODO
     private String checkIfLocationUnknown(Location location){
-        return Message.LocationUnknown.label;
+    // we need to check that location is not in map
+        String msg = null;
+        if (map.containsValue(location)){
+            msg = Message.LocationAlreadyCovered.label;
+        }
+        else
+            msg = Message.LocationUnknown.label;
+        return msg;
     }
     private String succcess(){
         return Message.Success.label;
