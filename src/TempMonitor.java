@@ -30,9 +30,13 @@ public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap
         return null;
     }
 
-    //TODO
+  
     private void deploySensorOk(Sensor sensor, Location location){
-
+        deployed.add(sensor);
+        map.put(sensor, location);
+        read.put(sensor, new Temperature(0));
+        sensor.setLocation(location);
+        sensor.setDeployed(true);
     }
     //TODO
     private String checkIfSensorDeployed(Sensor sensor){
