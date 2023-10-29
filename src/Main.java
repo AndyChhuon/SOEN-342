@@ -18,12 +18,14 @@ public class Main {
        Sensor othersensor = new Sensor(10);
        Location otherlocation = new Location("USA");
        othersensor.setLocation(otherlocation);
+      Location n = new Location("abc");
+       HashMap <Sensor, Location> map  = new HashMap<>() {{
+           put(testSensor, testLocation);
+           put(newSensor, otherlocation);
+       }};
+       //System.out.println(tempMonitor.deploySensor(testSensor,testLocation));
+       //System.out.println(tempMonitor.checkIfLocationCovered(n, map));
 
-//       Map<Sensor, Location> testHM  = new HashMap<Sensor, Location>() {{
-//          put(testSensor, testLocation);
-//          put(newSensor, otherlocation);
-//       }};
-       System.out.println(tempMonitor.deploySensor(testSensor,testLocation));
 
 
 

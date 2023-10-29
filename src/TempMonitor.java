@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TempMonitor {
     private List<Sensor> deployed;
@@ -18,8 +19,8 @@ public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap
         // return success, alreadyDeployed, or locationAlreadyCovered
         if(checkIfSensorDeployed(sensor).equals(Message.SensorAlreadyDeployed.toString()))
             return Message.SensorAlreadyDeployed.toString();
-//        if (checkIfLocationCovered(location).equals(Message.LocationAlreadyCovered.toString()))
-//            return Message.LocationAlreadyCovered.toString();
+        if (checkIfLocationCovered(location).equals(Message.LocationAlreadyCovered.toString()))
+            return Message.LocationAlreadyCovered.toString();
 
         return "";
     }
@@ -58,14 +59,19 @@ public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap
 
     }
 
-    //TODO
-    private String checkIfLocationCovered(Location location){
+    public String checkIfLocationCovered(Location location){
     // we need to check if location is in map hashmap
-        if (map.containsValue(location)){
-            return Message.LocationAlreadyCovered.label;
-        }
-        else
-            return null;
+        String msg = null;
+
+            if (map.containsValue(location)){
+                System.out.println(location.getLocationName());
+                msg = Message.LocationAlreadyCovered.label;
+            }
+            else{
+                msg = ("not there");
+            }
+        return msg;
+
     }
 
     //TODO
