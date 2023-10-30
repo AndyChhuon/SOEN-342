@@ -1,11 +1,5 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public class Main {
-    private List<Sensor> deployed;
-    private HashMap<Sensor, Temperature> read;
 
     public static void main(String[] args) {
         TempMonitor tempMonitor = new TempMonitor();
