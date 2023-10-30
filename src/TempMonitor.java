@@ -1,92 +1,99 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TempMonitor {
-    private List<Sensor> deployed;
-    private HashMap<Sensor, Location> map;
-    private HashMap<Sensor, Temperature> read;
-    
-//constructor
-public TempMonitor(List<Sensor> deployed, HashMap<Sensor, Location> map, HashMap<Sensor, Temperature> read) {
-        this.deployed = deployed;
-        this.map = map;
-        this.read = read;
-    }
-    
-    //TODO
-    public String deploySensor(Sensor sensor, Location location){
+    private final List<Sensor> deployed = new ArrayList<>();
+    private final HashMap<Sensor, Location> map = new HashMap<>();
+    private final HashMap<Sensor, Temperature> read = new HashMap<>();
+
+
+    public String deploySensor(Sensor sensor, Location location, Temperature temperature){
         // return success, alreadyDeployed, or locationAlreadyCovered
-        if(checkIfSensorDeployed(sensor).equals(Message.SensorAlreadyDeployed.toString()))
-            return Message.SensorAlreadyDeployed.toString();
-        if (checkIfLocationCovered(location).equals(Message.LocationAlreadyCovered.toString()))
-            return Message.LocationAlreadyCovered.toString();
+        String sensorAlreadyDeployed = checkIfSensorDeployed(sensor);
+        if(!Objects.isNull(sensorAlreadyDeployed))
+            return sensorAlreadyDeployed;
 
-        return "";
+        String locationAlreadyCovered = checkIfLocationCovered(location);
+        if (!Objects.isNull(locationAlreadyCovered))
+            return locationAlreadyCovered;
+
+        deploySensorOk(sensor, location, temperature);
+        return success();
     }
 
-    //TODO
     public String readTemperature(Location location){
-        // return success, or locationUnkown
-        return "";
+        Temperature locationTemperature = readTemperatureOk(location);
+        if(!Objects.isNull(locationTemperature)){
+            System.out.printf("Temperature at %s was found to be %s\n", location.getLocationName(), locationTemperature.getTemperature());
+            return success();
+        }else{
+            return checkIfLocationUnknown(location);
+        }
     }
 
-    //TODO
     private Temperature readTemperatureOk(Location location){
+        if(!Objects.isNull(checkIfLocationCovered(location))){
+            Optional<Sensor> findMatchingSensor = map.entrySet()
+                    .stream()
+                    .filter(entry -> location.getLocationName().equals(entry.getValue().getLocationName()))
+                    .map(Map.Entry::getKey)
+                    .findFirst();
+            if (findMatchingSensor.isPresent()) {
+                return read.get(findMatchingSensor.get());
+            }
+        }
+
         return null;
     }
 
-  
-    private void deploySensorOk(Sensor sensor, Location location){
-        deployed.add(sensor);
-        map.put(sensor, location);
-        read.put(sensor, new Temperature(0));
-        sensor.setLocation(location);
-        sensor.setDeployed(true);
+
+    private void deploySensorOk(Sensor sensor, Location location, Temperature temperature){
+        if(Objects.isNull(checkIfSensorDeployed(sensor)) && Objects.isNull(checkIfLocationCovered(location))){
+            deployed.add(sensor);
+            map.put(sensor, location);
+            read.put(sensor, temperature);
+            sensor.setLocation(location);
+            sensor.setDeployed(true);
+            System.out.printf("Sensor was deployed at %s\n", location.getLocationName());
+
+        }
+
     }
 
     private String checkIfSensorDeployed(Sensor sensor){
-    //To check if sensor is deployed, must check if sensor has a location
-        String msg = null;
-        try{
-            sensor.getLocation().getLocationName();
-            msg = Message.SensorAlreadyDeployed.toString();
-            return msg;
-            }
-        catch (Exception e){
-           msg = "Sensor has not been deployed";}
-        return msg;
+        //To check if sensor is deployed, must check if sensor has a location
+        if(sensor.isDeployed()){
+            return Message.SensorAlreadyDeployed.label;
+        }else{
+            return null;
+        }
 
     }
 
     public String checkIfLocationCovered(Location location){
-    // we need to check if location is in map hashmap
-        String msg = null;
-        if (map.containsValue(location)){
-            msg = Message.LocationAlreadyCovered.label;
+        // we need to check if location is in map hashmap
+        if (map.entrySet()
+                .stream()
+                .anyMatch(entry -> location.getLocationName().equals(entry.getValue().getLocationName()))){
+            return Message.LocationAlreadyCovered.label;
         }
         else{
-            msg = ("location ok");
+            return null;
         }
-        return msg;
 
     }
 
     private String checkIfLocationUnknown(Location location){
-    // we need to check that location is not in map
-        String msg = null;
-        if (map.containsValue(location)){
-            msg = Message.LocationAlreadyCovered.label;
+        // we need to check that location is not in map
+        if (map.entrySet()
+                .stream()
+                .noneMatch(entry -> location.getLocationName().equals(entry.getValue().getLocationName()))){
+            return Message.LocationUnknown.label;
         }
         else
-            msg = Message.LocationUnknown.label;
-        return msg;
+            return null;
     }
-    private String succcess(){
+    private String success(){
         return Message.Success.label;
     }
-
-
-
 
 }

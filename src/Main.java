@@ -1,35 +1,46 @@
-import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Main {
+    private List<Sensor> deployed;
+    private HashMap<Sensor, Temperature> read;
+
     public static void main(String[] args) {
-       TempMonitor tempMonitor = new TempMonitor(null, null,null);
-       Sensor newSensor = new Sensor(21);
-       tempMonitor.deploySensor(newSensor, new Location("Montreal"));
+        TempMonitor tempMonitor = new TempMonitor();
+        Sensor newSensor = new Sensor(21);
+
+        // deploy sensor
+        System.out.println("------------- deploying new sensor in montreal ------------------");
+        String response = tempMonitor.deploySensor(newSensor, new Location("montreal"), new Temperature(20));
+        System.out.printf("response: %s\n", response);
+
+        // deploy same sensor in different location
+        System.out.println("------------- deploying same sensor in different location ------------------");
+        response = tempMonitor.deploySensor(newSensor, new Location("vancouver"), new Temperature(20));
+        System.out.printf("response: %s\n", response);
+
+        // deploy new sensor in already covered location
+        System.out.println("------------- deploying new sensor in already covered location ------------------");
+        response = tempMonitor.deploySensor(new Sensor(22), new Location("montreal"), new Temperature(20));
+        System.out.printf("response: %s\n", response);
+
+        // deploy new sensor in new location
+        System.out.println("------------- deploying new sensor in new location ------------------");
+        response = tempMonitor.deploySensor(new Sensor(22), new Location("vancouver"), new Temperature(20));
+        System.out.printf("response: %s\n", response);
+
+        // Reading temperature of unknown location
+        System.out.println("------------- reading temperature of unknown location ------------------");
+        response = tempMonitor.readTemperature(new Location("florida"));
+        System.out.printf("response: %s\n", response);
 
 
-
-       //TESTING...TO DELETE
-       Sensor testSensor = new Sensor(22);
-       Sensor testSensorNoLoc = new Sensor(23);
-       Location testLocation = new Location("Canada");
-       testSensor.setLocation(testLocation);
-       Sensor othersensor = new Sensor(10);
-       Location otherlocation = new Location("USA");
-       othersensor.setLocation(otherlocation);
-      Location n = new Location("abc");
-       HashMap <Sensor, Location> map  = new HashMap<>() {{
-           put(testSensor, testLocation);
-           put(newSensor, otherlocation);
-       }};
-       //System.out.println(tempMonitor.deploySensor(testSensor,testLocation));
-       //System.out.println(tempMonitor.checkIfLocationCovered(n, map));
-
-
-
-
-
+        // Reading temperature of known location
+        System.out.println("------------- reading temperature of known location ------------------");
+        response = tempMonitor.readTemperature(new Location("montreal"));
+        System.out.printf("response: %s", response);
 
 
     }
