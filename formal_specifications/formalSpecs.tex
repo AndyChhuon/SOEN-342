@@ -113,7 +113,13 @@
 			response!~=~'Location~not~covered'
 		\end{schema}
 		
-		
+		\begin{schema}{LocationTempCollection}
+			\Xi TempMonitor\\
+			pairs! : map
+			\where
+			location! = read \ran map\\
+			temperature! = read(map^{-1}(location!))\\
+		\end{schema}
 		
 		\subsection{Operations}
 		
