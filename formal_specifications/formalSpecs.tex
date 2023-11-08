@@ -41,6 +41,7 @@
 			deployed~:~\mathbb{P}~SENSOR\_TYPE\\
 			map : SENSOR\_TYPE \nrightarrow LOCATION\_TYPE\\
 			read : SENSOR\_TYPE  \nrightarrow TEMPERATURE\_TYPE\\
+   			locationTemp : LOCATION\_TYPE  \nrightarrow TEMPERATURE\_TYPE\\
 			\where
 			deployed = \dom map\\
 			deployed = \dom read
@@ -58,7 +59,8 @@
 			location? \notin \ran map\\
 			deployed' = deployed \cup \{ sensor? \}\\
 			map' = map \cup \{ sensor? \mapsto location? \}\\
-			read' = read \cup \{ sensor? \mapsto temperature? \}
+			read' = read \cup \{ sensor? \mapsto temperature? \}\\
+   			locationTemp' = locationTemp \cup \{ location? \mapsto temperature? \}
 		\end{schema}
 		
 		
@@ -112,13 +114,12 @@
 			location? \notin \ran map\\
 			response!~=~'Location~not~covered'
 		\end{schema}
-		
+		%% For new operation
 		\begin{schema}{LocationTempCollection}
 			\Xi TempMonitor\\
-			pairs! : map
+			pairs! : LOCATION\_TYPE  \nrightarrow TEMPERATURE\_TYPE
 			\where
-			location! = read \ran map\\
-			temperature! = read(map^{-1}(location!))\\
+			pairs! : locationTemp
 		\end{schema}
 		
 		\subsection{Operations}
