@@ -93,8 +93,22 @@
 			response!~=~'Sensor~deployed'\\
 		\end{schema}
 		
-		
-		
+	
+       \begin{schema}{ReplaceSensorOK}
+              \Delta TempMonitor\\
+              sensorToBeReplaced? : SENSOR\_TYPE\\
+               newSensor? : SENSOR\_TYPE\\
+               location? : LOCATION\_TYPE\\
+                \where
+                sensorToBeReplaced? \in deployed\\
+                location? \notin \ran map\\
+               deployed' = (deployed \setminus \{ sensorToBeReplaced? \}) \cup \{ newSensor? \}\\
+              map' = map \oplus \{ newSensor? \mapsto location? \}\\
+              read' = read \oplus \{ newSensor? \mapsto read(sensorToBeReplaced?) \}\\
+              locationTemp' = locationTemp \oplus \{ location? \mapsto read(sensorToBeReplaced?) \}\\
+              temperature' = read(sensorToBeReplaced?) 
+   \end{schema}
+
 		\begin{schema}{LocationAlreadyCovered}
 			\Xi TempMonitor\\
 			location? : LOCATION\_TYPE\\
