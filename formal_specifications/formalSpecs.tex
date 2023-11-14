@@ -92,23 +92,17 @@
 			sensor? \in deployed\\
 			response!~=~'Sensor~deployed'\\
 		\end{schema}
-		
-	
-       \begin{schema}{ReplaceSensorOK}
-              \Delta TempMonitor\\
-              sensorToBeReplaced? : SENSOR\_TYPE\\
-               newSensor? : SENSOR\_TYPE\\
-               location? : LOCATION\_TYPE\\
-                \where
-                sensorToBeReplaced? \in deployed\\
-                location? \notin \ran map\\
-               deployed' = (deployed \setminus \{ sensorToBeReplaced? \}) \cup \{ newSensor? \}\\
-              map' = map \oplus \{ newSensor? \mapsto location? \}\\
-              read' = read \oplus \{ newSensor? \mapsto read(sensorToBeReplaced?) \}\\
-              locationTemp' = locationTemp \oplus \{ location? \mapsto read(sensorToBeReplaced?) \}\\
-              temperature' = read(sensorToBeReplaced?) 
-   \end{schema}
 
+
+  		\begin{schema}{SensorNotDeployed}
+			\Xi TempMonitor\\
+			sensor? : SENSOR\_TYPE\\
+			response! : MESSAGE
+			\where
+			sensor? \notin deployed\\
+			response!~=~'Sensor~not~deployed'\\
+		\end{schema}
+		
 		\begin{schema}{LocationAlreadyCovered}
 			\Xi TempMonitor\\
 			location? : LOCATION\_TYPE\\
@@ -128,12 +122,26 @@
 			location? \notin \ran map\\
 			response!~=~'Location~not~covered'
 		\end{schema}
+
+  
 		%% For new operation
 		\begin{schema}{LocationTempCollection}
 			\Xi TempMonitor\\
 			pairs! : LOCATION\_TYPE  \nrightarrow TEMPERATURE\_TYPE
 			\where
 			pairs! : locationTemp
+		\end{schema}
+
+  		\begin{schema}{ReplaceSensorOK}
+			\Delta TempMonitor\\
+			sensorToReplace? : SENSOR\_TYPE\\
+			newSensor? : LOCATION\_TYPE\\
+			\where
+			sensor? \in deployed\\
+			location? \notin \ran map\\
+			deployed' = deployed \cup \{ newSensor? \} \char`\\ \{sensorToReplace? \} \\
+			map' = map \cup \{ newSensor? \mapsto map(sensorToReplace?) \} \dsub \{sensorToReplace\}\\
+			read' = read \cup \{ newSensor? \mapsto read(sensorToReplace?) \} \dsub \{sensorToReplace\}
 		\end{schema}
 		
 		\subsection{Operations}
@@ -149,8 +157,9 @@
 
   		\[ ReadLocationTempCollection~\hat{=}~\\
 		~~~(LocationTempCollection \wedge Success) \]
-               \[ ReplaceSensor~\hat{=}~\\
-               ~~(ReplaceSensorOK \wedge Success) \]
+
+ 		 \[ ReplaceSensor~\hat{=}~\\
+		~~~(ReplaceSensorOK \wedge Success) \oplus SensorNotDeployed \]
 		
 \end{spacing}
 \end{document}
