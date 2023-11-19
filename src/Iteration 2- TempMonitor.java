@@ -28,8 +28,13 @@ public class TempMonitor {
     // Replace a sensor
     public void replaceSensor(Sensor sensorToReplace) {
         Sensor newSensor = makeSensor(); 
-        sensorCatalog.addSensor(newSensor);
-        deploymentCatalog.replaceSensor(sensorToReplace, newSensor);
+       // Remove the old sensor from the catalogs
+    sensorCatalog.removeSensor(sensorToReplace);
+    deploymentCatalog.removeSensor(sensorToReplace);
+
+    // Add the new sensor to the catalogs
+    sensorCatalog.addSensor(newSensor);
+    deploymentCatalog.deploySensor(newSensor, sensorToReplace.getLocation(), getTemperatureForReplacement());
     }
 
     // Get sensor information by location
