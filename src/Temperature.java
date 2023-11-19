@@ -10,5 +10,7 @@ public class Temperature {
         return temperatureValue;
     }
 
-
+  public void setTemperatureValue(int temperatureValue) {
+        this.temperatureValue = temperatureValue;
+    }
 }
