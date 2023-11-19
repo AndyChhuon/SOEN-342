@@ -6,6 +6,38 @@ public class TempMonitor {
     private final HashMap<Sensor, Temperature> read = new HashMap<>();
     private final HashMap<Location, Temperature> LocationTemp = new HashMap<>();
 
+  // Constructor
+    public TempMonitor() {
+        this.sensorCatalog = new SensorCatalog();
+        this.temperatureCatalog = new TemperatureCatalog();
+        this.locationCatalog = new LocationCatalog();
+        this.deploymentCatalog = new DeploymentCatalog();
+        
+    }
+    
+    // Replace a sensor
+    public String replaceSensor(Sensor sensorToReplace) {
+        // Check if the sensor to replace is deployed
+        String sensorDeployedStatus = checkIfSensorDeployed(sensorToReplace);
+        if (!Objects.isNull(sensorDeployedStatus)) {
+            // Create a new sensor to replace the old one
+            Sensor newSensor = makeSensor();
+
+            // Remove the old sensor from the catalogs
+            sensorCatalog.removeSensor(sensorToReplace);
+            deploymentCatalog.removeSensor(sensorToReplace);
+
+            // Add the new sensor to the catalogs
+            sensorCatalog.addSensor(newSensor);
+            deploymentCatalog.deploySensor(newSensor, sensorToReplace.getLocation(), getTemperatureForReplacement());
+
+            return success();
+        } else {
+            // If the sensor is not deployed, return an appropriate message
+            return sensorDeployedStatus;
+        }
+    }
+
     public String deploySensor(Sensor sensor, Location location, Temperature temperature){
         // return success, alreadyDeployed, or locationAlreadyCovered
         String sensorAlreadyDeployed = checkIfSensorDeployed(sensor);
