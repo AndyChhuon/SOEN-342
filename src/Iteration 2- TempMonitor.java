@@ -27,7 +27,7 @@ public class TempMonitor {
 
     // Replace a sensor
     public void replaceSensor(Sensor sensorToReplace) {
-        Sensor newSensor = makeNewSensor(); 
+        Sensor newSensor = makeSensor(); 
         sensorCatalog.addSensor(newSensor);
         deploymentCatalog.replaceSensor(sensorToReplace, newSensor);
     }
@@ -48,18 +48,18 @@ public class TempMonitor {
     }
 
     // Create a new sensor
-    private Sensor makeNewSensor() {
+    private Sensor makeSensor() {
      
         return new Sensor();
     }
 
     // Create a new location
-    private Location makeNewLocation(String location) {
+    private Location makeLocation(String location) {
         return new Location(location);
     }
 
     // Create a new temperature
-    private Temperature makeNewTemperature(int temperature) {
+    private Temperature makeTemperature(int temperature) {
           return new Temperature(temperature);
     }
 }
