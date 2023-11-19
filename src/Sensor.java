@@ -17,8 +17,7 @@ public class Sensor {
         this.deployed = deployed;
     }
 
-
-    public boolean isDeployed() {
+ public boolean getDeployedStatus() {
         return deployed;
     }
 
