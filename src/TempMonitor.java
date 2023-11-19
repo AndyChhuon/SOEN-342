@@ -37,6 +37,12 @@ public class TempMonitor {
             return sensorDeployedStatus;
         }
     }
+      // Get a new temperature for replacement
+    private Temperature getTemperatureForReplacement() {
+        Random random = new Random();
+        int temperatureValue = random.nextInt(10) + 20; 
+        return makeTemperature(temperatureValue);
+    }
 
     public String deploySensor(Sensor sensor, Location location, Temperature temperature){
         // return success, alreadyDeployed, or locationAlreadyCovered
