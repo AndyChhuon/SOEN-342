@@ -1,13 +1,13 @@
 public class Temperature {
 
-    private int temperature;
+    private int temperatureValue;
 
-    Temperature(int temperature){
-        this.temperature = temperature;
+    Temperature(int temperatureValue){
+        this.temperatureValue = temperatureValue;
     }
 
-    public int getTemperature() {
-        return temperature;
+    public int getTemperatureValue() {
+        return temperatureValue;
     }
 
 
