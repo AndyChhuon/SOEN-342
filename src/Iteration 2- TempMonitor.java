@@ -27,7 +27,7 @@ public class TempMonitor {
 
     // Replace a sensor
     public void replaceSensor(Sensor sensorToReplace) {
-        Sensor newSensor = makeNewSensor(); // You need to implement makeNewSensor method
+        Sensor newSensor = makeNewSensor(); 
         sensorCatalog.addSensor(newSensor);
         deploymentCatalog.replaceSensor(sensorToReplace, newSensor);
     }
