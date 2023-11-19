@@ -133,16 +133,17 @@
 		\end{schema}
 
   		\begin{schema}{ReplaceSensorOK}
-			\Delta TempMonitor\\
-			sensorToReplace? : SENSOR\_TYPE\\
-			newSensor? : LOCATION\_TYPE\\
-			\where
-			sensor? \in deployed\\
-			location? \notin \ran map\\
-			deployed' = deployed \cup \{ newSensor? \} \char`\\ \{sensorToReplace? \} \\
-			map' = map \cup \{ newSensor? \mapsto map(sensorToReplace?) \} \dsub \{sensorToReplace\}\\
-			read' = read \cup \{ newSensor? \mapsto read(sensorToReplace?) \} \dsub \{sensorToReplace\}
-		\end{schema}
+                 \Delta TempMonitor\\
+                 sensorToReplace? : \text{SENSOR\_TYPE}\\
+                  newSensor? : \text{LOCATION\_TYPE}\\
+                 \where
+                 sensorToReplace? \in deployed\\
+                 newSensor? \notin \ran map\\
+                 deployed' = (deployed \cup \{ newSensor? \}) \setminus \{sensorToReplace? \} \\
+                 map' = (map \cup \{ newSensor? \mapsto map(sensorToReplace?) \}) \dres \{sensorToReplace?\}\\
+                read' = (read \cup \{ newSensor? \mapsto read(sensorToReplace?) \}) \dres \{sensorToReplace?\}
+                \end{schema}
+
 		
 		\subsection{Operations}
 		
