@@ -47,6 +47,12 @@ public class TempMonitor {
         }
     }
 
+    public String ReadLocationTempCollection(){
+        System.out.println("------------------ Inside ReadLocationTempCollection --------------------");
+        printLocationTemp();
+        return success();
+    }
+
     private Temperature readTemperatureOk(Location location){
         if(!Objects.isNull(checkIfLocationCovered(location))){
             Optional<Sensor> findMatchingSensor = map.entrySet()
@@ -198,7 +204,7 @@ public class TempMonitor {
         return Message.Success.label;
     }
 
-    public void printLocationTemp() {
+    private void printLocationTemp() {
         System.out.println("-----Location Temperature Pairs-------");
         for (Map.Entry<Location, Temperature> entry : LocationTemp.entrySet()) {
             Location location = entry.getKey();

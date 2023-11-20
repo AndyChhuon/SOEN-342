@@ -1,4 +1,3 @@
-
 public class Main {
 
     public static void main(String[] args) {
@@ -45,16 +44,16 @@ public class Main {
         // Replacing sensor not deployed yet
         System.out.println("------------- Replacing not deployed sensor ------------------");
         response = tempMonitor.replaceSensor(newSensor2,newSensor3);
-        System.out.printf("response: %s\n", response);
+        System.out.printf("response: %s\n\n\n", response);
 
         // Replacing valid deployed sensor
         System.out.println("------------- Replacing valid deployed sensor ------------------");
         response = tempMonitor.replaceSensor(newSensor,newSensor3);
-        System.out.printf("response: %s\n", response);
+        System.out.printf("response: %s\n\n\n", response);
 
-        // Reading temperature of known location
-        System.out.println("------------- Getting Location Temperature pairs ------------------");
-        tempMonitor.printLocationTemp();
+        response = tempMonitor.ReadLocationTempCollection();
+        System.out.printf("response: %s", response);
+
     }
 
 
