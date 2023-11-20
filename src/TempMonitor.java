@@ -4,6 +4,8 @@ public class TempMonitor {
     private final List<Sensor> deployed = new ArrayList<>();
     private final HashMap<Sensor, Location> map = new HashMap<>();
     private final HashMap<Sensor, Temperature> read = new HashMap<>();
+    private final HashMap<Location, Temperature> LocationTemp = new HashMap<>();
+
 
 
     public String deploySensor(Sensor sensor, Location location, Temperature temperature){
@@ -66,6 +68,7 @@ public class TempMonitor {
             deployed.add(sensor);
             map.put(sensor, location);
             read.put(sensor, temperature);
+            LocationTemp.put(location, temperature);
             sensor.setLocation(location);
             sensor.setDeployed(true);
             System.out.printf("Sensor was deployed at %s\n", location.getLocationName());
@@ -195,4 +198,12 @@ public class TempMonitor {
         return Message.Success.label;
     }
 
+    public void printLocationTemp() {
+        System.out.println("-----Location Temperature Pairs-------");
+        for (Map.Entry<Location, Temperature> entry : LocationTemp.entrySet()) {
+            Location location = entry.getKey();
+            Temperature temperature = entry.getValue();
+            System.out.println("Location: " + location.getLocationName() + ", Temperature: " + temperature.getTemperature());
+        }
+    }
 }

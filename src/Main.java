@@ -52,7 +52,9 @@ public class Main {
         response = tempMonitor.replaceSensor(newSensor,newSensor3);
         System.out.printf("response: %s\n", response);
 
-
+        // Reading temperature of known location
+        System.out.println("------------- Getting Location Temperature pairs ------------------");
+        tempMonitor.printLocationTemp();
     }
 
 
