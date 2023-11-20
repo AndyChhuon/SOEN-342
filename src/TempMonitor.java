@@ -4,40 +4,8 @@ public class TempMonitor {
     private final List<Sensor> deployed = new ArrayList<>();
     private final HashMap<Sensor, Location> map = new HashMap<>();
     private final HashMap<Sensor, Temperature> read = new HashMap<>();
-    private final HashMap<Location, Temperature> LocationTemp = new HashMap<>();
 
-  // Constructor
-    public TempMonitor() {
-        this.sensorCatalog = new SensorCatalog();
-        this.temperatureCatalog = new TemperatureCatalog();
-        this.locationCatalog = new LocationCatalog();
-        this.deploymentCatalog = new DeploymentCatalog();
-        
-    }
-    
-    // Replace a sensor
-    public String replaceSensor(Sensor sensorToReplace) {
-        // Check if the sensor to replace is deployed
-        String sensorDeployedStatus = checkIfSensorDeployed(sensorToReplace);
-        if (!Objects.isNull(sensorDeployedStatus)) {
-            // Create a new sensor to replace the old one
-            Sensor newSensor = makeSensor();
 
-            // Remove the old sensor from the catalogs
-            sensorCatalog.removeSensor(sensorToReplace);
-            deploymentCatalog.removeSensor(sensorToReplace);
-
-            // Add the new sensor to the catalogs
-            sensorCatalog.addSensor(newSensor);
-            deploymentCatalog.deploySensor(newSensor, sensorToReplace.getLocation(), newSensor.getLocation().getTemperature());
-
-            return success();
-        } else {
-            // If the sensor is not deployed, return an appropriate message
-            return sensorDeployedStatus;
-        }
-    }
-     
     public String deploySensor(Sensor sensor, Location location, Temperature temperature){
         // return success, alreadyDeployed, or locationAlreadyCovered
         String sensorAlreadyDeployed = checkIfSensorDeployed(sensor);
@@ -62,6 +30,21 @@ public class TempMonitor {
         }
     }
 
+    public String replaceSensor(Sensor sensorToReplace, Sensor newSensor){
+        String sensorNotDeployed = checkIfSensorNotDeployed(sensorToReplace);
+        String newSensorAlreadyDeployed = checkIfSensorDeployed(newSensor);
+        if(!Objects.isNull(sensorNotDeployed)){
+            return sensorNotDeployed;
+
+        }else if(!Objects.isNull(newSensorAlreadyDeployed)) {
+            return newSensorAlreadyDeployed;
+        }
+        else{
+            replaceSensorOk(sensorToReplace,newSensor);
+            return success();
+        }
+    }
+
     private Temperature readTemperatureOk(Location location){
         if(!Objects.isNull(checkIfLocationCovered(location))){
             Optional<Sensor> findMatchingSensor = map.entrySet()
@@ -83,7 +66,6 @@ public class TempMonitor {
             deployed.add(sensor);
             map.put(sensor, location);
             read.put(sensor, temperature);
-            LocationTemp.put(location,temperature);
             sensor.setLocation(location);
             sensor.setDeployed(true);
             System.out.printf("Sensor was deployed at %s\n", location.getLocationName());
@@ -92,12 +74,96 @@ public class TempMonitor {
 
     }
 
+
+    private void replaceSensorOk(Sensor sensorToReplace, Sensor newSensor){
+        System.out.println("-------------------Before replaceSensorOk--------------------");
+        printDeployed();
+        printSensorLocations();
+        printSensorTemperatures();
+
+        //Replace in deployed
+        deployed.stream()
+                .filter(sensor -> sensor.getSensorID() == sensorToReplace.getSensorID())
+                .findFirst()
+                .ifPresent(sensor -> deployed.set(deployed.indexOf(sensor), newSensor));
+
+        //Replace in map
+        map.entrySet().stream()
+                .filter(entry -> entry.getKey().getSensorID() == sensorToReplace.getSensorID())
+                .findFirst()
+                .ifPresent(entry -> {
+                    Location previousLocation = entry.getValue();
+                    newSensor.setLocation(previousLocation);
+                    map.remove(entry.getKey());
+                    map.put(newSensor, previousLocation);
+                });
+
+        //Replace in read
+        read.entrySet().stream()
+                .filter(entry -> entry.getKey().getSensorID() == sensorToReplace.getSensorID())
+                .findFirst()
+                .ifPresent(entry -> {
+                    Temperature previousTemperature = entry.getValue();
+                    read.remove(entry.getKey());
+                    read.put(newSensor, previousTemperature);
+                });
+        newSensor.setDeployed(true);
+
+
+        System.out.println("-------------------After replaceSensorOk--------------------");
+        printDeployed();
+        printSensorLocations();
+        printSensorTemperatures();
+    }
+
+    private void printDeployed(){
+        System.out.println("-----Deployed-------");
+        for (Sensor sensor : deployed) {
+            System.out.println("Sensor ID: " + sensor.getSensorID());
+        }
+    }
+
+    public void printSensorLocations() {
+        System.out.println("-----Sensor Location Pairs-------");
+        for (Map.Entry<Sensor, Location> entry : map.entrySet()) {
+            Sensor sensor = entry.getKey();
+            Location location = entry.getValue();
+            System.out.println("Sensor ID: " + sensor.getSensorID() + ", Location: " + location.getLocationName());
+        }
+    }
+
+    public void printSensorTemperatures() {
+        System.out.println("-----Sensor Temperature Pairs-------");
+        for (Map.Entry<Sensor, Temperature> entry : read.entrySet()) {
+            Sensor sensor = entry.getKey();
+            Temperature temperature = entry.getValue();
+
+            int sensorID = sensor.getSensorID();
+            double tempValue = temperature.getTemperature();
+
+            System.out.println("Sensor ID: " + sensorID + ", Temperature: " + tempValue);
+        }
+    }
+
+
+
+
     private String checkIfSensorDeployed(Sensor sensor){
         //To check if sensor is deployed, must check if sensor has a location
         if(sensor.isDeployed()){
             return Message.SensorAlreadyDeployed.label;
         }else{
             return null;
+        }
+
+    }
+
+    private String checkIfSensorNotDeployed(Sensor sensor){
+        //returns null if is deployed
+        if(sensor.isDeployed()){
+            return null;
+        }else{
+            return Message.SensorNotDeployed.label;
         }
 
     }
@@ -129,8 +195,4 @@ public class TempMonitor {
         return Message.Success.label;
     }
 
-    public HashMap<Location, Temperature> getLocationTemp() {
-        //getting location temperature pairs
-        return LocationTemp;
-    }
 }

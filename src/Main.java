@@ -34,7 +34,23 @@ public class Main {
         // Reading temperature of known location
         System.out.println("------------- reading temperature of known location ------------------");
         response = tempMonitor.readTemperature(new Location("montreal"));
-        System.out.printf("response: %s", response);
+        System.out.printf("response: %s\n", response);
+
+
+        Sensor newSensor2 = new Sensor(12);
+        Sensor newSensor3 = new Sensor(15);
+
+        System.out.println("\n\n-------------Iteration 2 ------------------\n\n");
+
+        // Replacing sensor not deployed yet
+        System.out.println("------------- Replacing not deployed sensor ------------------");
+        response = tempMonitor.replaceSensor(newSensor2,newSensor3);
+        System.out.printf("response: %s\n", response);
+
+        // Replacing valid deployed sensor
+        System.out.println("------------- Replacing valid deployed sensor ------------------");
+        response = tempMonitor.replaceSensor(newSensor,newSensor3);
+        System.out.printf("response: %s\n", response);
 
 
     }
